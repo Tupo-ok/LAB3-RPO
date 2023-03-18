@@ -36,13 +36,30 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
+
+add_library(spdlog STATIC IMPORTED)
+set_target_properties(spdlog PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/build/${ANDROID_ABI}/libspdlog.a)
+
+
+add_library(mbedcrypto STATIC IMPORTED)
+set_target_properties(mbedcrypto PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/mbedtls/build/${ANDROID_ABI}/library/libmbedcrypto.so)
+
+
+target_include_directories(myapplication PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/spdlog/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/mbedtls/mbedtls/include)
+
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
         myapplication
-
+        spdlog
+        mbedcrypto
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
